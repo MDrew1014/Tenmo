@@ -5,15 +5,11 @@ import java.math.BigDecimal;
 public class TenmoAccount {
 	private int accountId;
 	private int userId;
-	private double balance;
+	private BigDecimal balance;
 
-	public TenmoAccount(int accountId, int userId) {
-		this.accountId = accountId;
-		this.userId = userId;
-		this.balance = 1000.00;
-	}
+	
 
-	public TenmoAccount(int accountId, int userId, double balance) {
+	public TenmoAccount(int accountId, int userId, BigDecimal balance) {
 		this.accountId = accountId;
 		this.userId = userId;
 		this.balance = balance;
@@ -27,7 +23,7 @@ public class TenmoAccount {
 		return userId;
 	}
 
-	public double getBalance() {
+	public BigDecimal getBalance() {
 		return balance;
 	}
 	
