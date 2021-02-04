@@ -2,21 +2,27 @@ package com.techelevator.tenmo.dao;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
-
+@Component
 public class TenmoSqlDAO implements TenmoDAO{
 	private JdbcTemplate jdbcTemplate;
+	private DataSource dataSource;
 	
-	public TenmoSqlDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+	public TenmoSqlDAO(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.dataSource = dataSource;
     }
 
 	@Override
@@ -30,9 +36,16 @@ public class TenmoSqlDAO implements TenmoDAO{
 	
 
 	@Override
-	public void transfer() {
-		// TODO Auto-generated method stub
-		
+	public void transfer() throws SQLException {
+		try{
+			this.dataSource.getConnection().setAutoCommit(false);
+		}
+		catch(Exception e) {
+			this.dataSource.getConnection().rollback();
+			
+		}finally {
+			this.dataSource.getConnection().setAutoCommit(true);
+		}
 	}
 	 
 

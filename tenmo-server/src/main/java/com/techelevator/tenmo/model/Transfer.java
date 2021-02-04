@@ -31,9 +31,7 @@ public class Transfer {
 		this.amount = amount;
 	}
 	public Transfer() {
-		this.accountFrom = accountFrom;
-		this.accountTo = accountTo;
-		this.amount = amount;
+		
 	}
 	
 	
