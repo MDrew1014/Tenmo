@@ -18,6 +18,7 @@ import com.techelevator.tenmo.dao.UserDAO;
 import com.techelevator.tenmo.model.TenmoAccount;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferRequest;
+import com.techelevator.tenmo.model.User;
 @RequestMapping("/tenmo/account")
 @RestController
 public class AccountController {
@@ -69,10 +70,12 @@ public class AccountController {
 	@RequestMapping(path = "/transfer/{transferId}", method = RequestMethod.GET)
 	public Transfer transferById(@PathVariable int transferId){
 		return tDAO.transferById(transferId);
-		
-		
-		
-		
+				
+	}
+	@PreAuthorize("isAuthenticated()")
+	@RequestMapping(path = "/users", method = RequestMethod.GET)
+	public List<User> getAllUsers(){
+	return uDAO.findAll();
 	}
 
 }

@@ -1,7 +1,10 @@
 package com.techelevator.tenmo;
 
+import java.math.BigDecimal;
+
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.TenmoAccount;
+import com.techelevator.tenmo.models.TransferRequest;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AccountServiceException;
@@ -96,8 +99,13 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		
 	}
 
-	private void sendBucks() {
-		// TODO Auto-generated method stub
+	private void sendBucks()  {
+		try {
+			console.printUsers(accountService.listUsers());
+		} catch (AccountServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 

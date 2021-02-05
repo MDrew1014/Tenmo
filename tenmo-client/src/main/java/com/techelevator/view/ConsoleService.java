@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 
 import com.techelevator.tenmo.models.Transfer;
+import com.techelevator.tenmo.models.User;
 
 public class ConsoleService {
 
@@ -77,12 +78,38 @@ public class ConsoleService {
 		return result;
 	}
 	public void printTransfers(Transfer[] transfer) {
+		if(transfer != null) {
 	    System.out.println("--------------------------------------------");
 	    System.out.println("Transfers");
-	    System.out.println("ID                    From/To            Amount");
+	    System.out.println("ID             From/To          Amount");
 	    System.out.println("--------------------------------------------");
 	    for (Transfer transfers : transfer) {
-	      System.out.println(transfers.getAccountFrom() + ": " + transfers.getAccountTo());
+	      System.out.println(transfers.getTransferId() + "\t:\t" + transfers.getUsernameFrom()+"\t\t"+ transfers.getAmount());
 	    }
+		}
 	  }
+	public void printTransferDetails(Transfer transfer) {
+		if(transfer != null) {
+			System.out.println("--------------------------------------------");
+			System.out.println("Transfer Details");
+			System.out.println("--------------------------------------------");
+			System.out.println("ID: "+ transfer.getTransferId());
+			System.out.println("From: "+ transfer.getUsernameFrom());
+			System.out.println("To: "+ transfer.getUsernameTo());
+			System.out.println("Type: "+ transfer.getTransferTypeId());
+			System.out.println("Status: "+ transfer.getTransferStatusId());
+			System.out.println("Amount: $"+transfer.getAmount());
+		}
+	}
+	
+	public void printUsers(User[] user) {
+		System.out.println("--------------------------------------------");
+	    System.out.println("Users");
+	    System.out.println("ID             Name");
+	    System.out.println("--------------------------------------------");
+		for(User users : user) {
+			System.out.println(users.getId()+"\t\t"+users.getUsername());
+			
+		}
+	}
 }

@@ -85,11 +85,11 @@ public class TenmoSqlDAO implements TenmoDAO{
 	@Override
 	public List<Transfer> listTransfers(int userId) {
 		List<Transfer> transfer = new ArrayList<>();
-		String query = "SELECT t.*, u.username AS userFrom, v.username AS userTo FROM transfers " + 
+		String query = "SELECT t.*, u.username AS userFrom, v.username AS userTo FROM transfers t " + 
 				"JOIN accounts a ON t.account_from = a.account_id " + 
 				"JOIN accounts b ON t.account_to = b.account_id " + 
 				"JOIN users u ON a.user_id = u.user_id " + 
-				"JOIN users v ON b.user_id = v.user_id ;" + 
+				"JOIN users v ON b.user_id = v.user_id " + 
 				"WHERE a.user_id = ? OR b.user_id = ?";
 		SqlRowSet results = this.jdbcTemplate.queryForRowSet(query, userId, userId);
 		while(results.next()) {
@@ -110,11 +110,16 @@ public class TenmoSqlDAO implements TenmoDAO{
 	
 	private Transfer mapRowToTransfer(SqlRowSet rs) {
        Transfer transfer = new Transfer();
+       transfer.setTransferId(rs.getInt("transfer_id"));
+       transfer.setTransferTypeId(rs.getInt("transfer_type_id"));
+       transfer.setTransferStatusId(rs.getInt("transfer_status_id"));
         transfer.setAccountFrom(rs.getInt("account_from"));
         transfer.setAccountTo(rs.getInt("account_to"));
         transfer.setAmount(rs.getBigDecimal("amount"));
+        transfer.setUsernameFrom(rs.getString("userFrom"));
+        transfer.setUsernameTo(rs.getString("userTo"));
         return transfer;
-        
+        //TODO UPDATE WITH ALL FIELDS 
     }
 
 	
