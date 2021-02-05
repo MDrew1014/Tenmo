@@ -1,13 +1,10 @@
 package com.techelevator.tenmo.controller;
 
-import java.math.BigDecimal;
 import java.security.Principal;
-import java.util.List;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,7 +33,7 @@ public class AccountController {
 	public TenmoAccount getBalance(Principal principal) {
 		//TODO get user name for principal use userDAO to get user ID
 		//TODO use user id to get user account from tenmoDAO(make get account by user ID)
-		return new TenmoAccount(999,888, BigDecimal.valueOf(1000.00));
+		return new TenmoAccount(999,888, 1000.00);
 	}
 	
 	@PreAuthorize("isAuthenticated()")
@@ -46,19 +43,5 @@ public class AccountController {
 		//fill out transfer class from user to user amount
 		//principal.getName()
 		
-	}
-	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(path = "/transfer", method = RequestMethod.GET)
-	public List<Transfer> listTransfers(Principal principal){
-		return null;
-	}
-	@PreAuthorize("isAuthenticated()")
-	@RequestMapping(path = "/transfer/{transferId}", method = RequestMethod.GET)
-	public List<Transfer> transferById(@PathVariable int transferId){
-		return null;
-		
-		
-		
-		
-	}
+	
 }
