@@ -51,8 +51,8 @@ public class TenmoSqlDAO implements TenmoDAO{
 			if(request.getAmount().compareTo(balance)<0) {
 				throw new Exception("400 Error");
 			}else {
-				String query = "START TRANSACTION; UPDATE account SET balance = balance - ? WHERE user_id = ?;"
-						+ "UPDATE account SET balance = balance + ? WHERE user_id = ?;"
+				String query = "START TRANSACTION; UPDATE accounts SET balance = balance - ? WHERE user_id = ?;"
+						+ "UPDATE accounts SET balance = balance + ? WHERE user_id = ?;"
 						+ "INSERT INTO transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (2,2,?,?,?)"; 
 				jdbcTemplate.update(query, request.getAmount(), request.getUserIdFrom(),request.getAmount(),
 						request.getUserIdTo(), request.getUserIdFrom(), request.getUserIdTo(), request.getAmount());
