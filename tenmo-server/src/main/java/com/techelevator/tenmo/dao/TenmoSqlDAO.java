@@ -46,7 +46,11 @@ public class TenmoSqlDAO implements TenmoDAO{
 	public void transfer(TransferRequest request) throws SQLException {
 		try{
 			this.dataSource.getConnection().setAutoCommit(false);
-			
+			BigDecimal balance = this.jdbcTemplate.queryForObject("SELECT balance FROM accounts WHERE user_id = ?",BigDecimal.class, request.getUserIdFrom());
+			//TODO condition logic if request amount is greater than balance throw 400 error if request is greater than balance throw
+			//TODO Decrease the balance on the from user_id
+			//TODO increase the balance on the to user_id
+			//TODO insert the transfer record
 			
 			
 			
