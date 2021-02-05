@@ -9,9 +9,11 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import com.techelevator.tenmo.model.TenmoAccount;
 import com.techelevator.tenmo.model.Transfer;
@@ -43,20 +45,24 @@ public class TenmoSqlDAO implements TenmoDAO{
 	
 
 	@Override
-	public void transfer(TransferRequest request) throws SQLException {
+	public void transfer(TransferRequest request) throws Exception {
+		//this.dataSource.getConnection().setAutoCommit(false);
+		Connection conn = jdbcTemplate.getDataSource().getConnection();
 		try{
-			this.dataSource.getConnection().setAutoCommit(false);
+			conn.setAutoCommit(false);
+			
 			BigDecimal balance = this.jdbcTemplate.queryForObject("SELECT balance FROM accounts WHERE user_id = ?",BigDecimal.class, request.getUserIdFrom());
 			//TODO condition logic if request amount is greater than balance throw 400 error if request is greater than balance throw
-			if(request.getAmount().compareTo(balance)<0) {
+			if(request.getAmount().compareTo(balance)>0) {
 				throw new Exception("400 Error");
 			}else {
-				String query = "START TRANSACTION; UPDATE accounts SET balance = balance - ? WHERE user_id = ?;"
+				//TODO change user_id to account_id. use a subquery
+				String query = "UPDATE accounts SET balance = balance - ? WHERE user_id = ?;"
 						+ "UPDATE accounts SET balance = balance + ? WHERE user_id = ?;"
 						+ "INSERT INTO transfers(transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (2,2,?,?,?)"; 
 				jdbcTemplate.update(query, request.getAmount(), request.getUserIdFrom(),request.getAmount(),
 						request.getUserIdTo(), request.getUserIdFrom(), request.getUserIdTo(), request.getAmount());
-				this.dataSource.getConnection().commit();
+				conn.commit();
 			}			
 			//TODO Decrease the balance on the from user_id
 		
@@ -65,10 +71,12 @@ public class TenmoSqlDAO implements TenmoDAO{
 			
 		}
 		catch(Exception e) {
-			this.dataSource.getConnection().rollback();
-			
+			if(!conn.getAutoCommit()) {
+				conn.rollback();
+			}
+			throw e;
 		}finally {
-			this.dataSource.getConnection().setAutoCommit(true);
+			conn.setAutoCommit(true);
 		}
 	}
 	 
