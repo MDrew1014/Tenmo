@@ -13,7 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.techelevator.tenmo.model.TenmoAccount;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.TransferRequest;
 import com.techelevator.tenmo.model.User;
 @Component
 public class TenmoSqlDAO implements TenmoDAO{
@@ -26,19 +28,33 @@ public class TenmoSqlDAO implements TenmoDAO{
     }
 
 	@Override
-	public BigDecimal getBalance(String username) {
-		return jdbcTemplate.queryForObject("Select balance FROM accounts " + 
+	public TenmoAccount getBalance(String username) {
+	SqlRowSet result =	jdbcTemplate.queryForRowSet("Select accounts.* FROM accounts " + 
 				"JOIN users ON users.user_id = accounts.user_id " + 
-				"WHERE username = ?", BigDecimal.class, username);
+				"WHERE username = ?", username); 
+	if(result.next()) {
+		return new TenmoAccount(result.getInt("account_id"), result.getInt("user_id"), result.getBigDecimal("balance"));
+	}		
+		
+		return null;
 		
 	}
 
 	
 
 	@Override
-	public void transfer() throws SQLException {
+	public void transfer(TransferRequest request) throws SQLException {
 		try{
 			this.dataSource.getConnection().setAutoCommit(false);
+			
+			
+			
+			
+			
+			
+			
+			
+			this.dataSource.getConnection().commit();
 		}
 		catch(Exception e) {
 			this.dataSource.getConnection().rollback();
@@ -58,10 +74,10 @@ public class TenmoSqlDAO implements TenmoDAO{
 				"JOIN accounts b ON t.account_to = b.account_id " + 
 				"JOIN users u ON a.user_id = u.user_id " + 
 				"JOIN users v ON b.user_id = v.user_id ;" + 
-				"WHERE a.user_id = ?";
-		SqlRowSet results = this.jdbcTemplate.queryForRowSet(query);
+				"WHERE a.user_id = ? OR b.user_id = ?";
+		SqlRowSet results = this.jdbcTemplate.queryForRowSet(query, userId, userId);
 		while(results.next()) {
-			Transfer resultTransfer = this.mapRowToUser(results);
+			Transfer resultTransfer = this.mapRowToTransfer(results);
 			transfer.add(resultTransfer);
 		}
 		return transfer;
@@ -70,17 +86,13 @@ public class TenmoSqlDAO implements TenmoDAO{
 	@Override
 	public Transfer transferById(int transferId) {
 		// TODO Auto-generated method stub
-		return jdbcTemplate.queryForObject("SELECT t.*, u.username AS userFrom, v.username AS userTo, ts.transfer_status_desc, tt.transfer_type_desc FROM transfers " + 
-				"JOIN accounts a ON t.account_from = a.account_id " + 
-				"JOIN accounts b ON t.account_to = b.account_id " + 
-				"JOIN users u ON a.user_id = u.user_id " + 
-				"JOIN users v ON b.user_id = v.user_id " + 
-				"JOIN transfer_statuses ts ON t.transfer_status_id = ts.transfer_status_id " + 
-				"JOIN transfer_types tt ON t.transfer_type_id = tt.transfer_type_id " + 
-				"WHERE t.transfer_id = ?", Transfer.class, transferId);
+		SqlRowSet results = jdbcTemplate.queryForRowSet("SELECT * FROM transfer WHERE transfer_id = ?", transferId);
+		if(results.next()) {
+			return mapRowToTransfer(results);
+		}return null;
 	}
 	
-	private Transfer mapRowToUser(SqlRowSet rs) {
+	private Transfer mapRowToTransfer(SqlRowSet rs) {
        Transfer transfer = new Transfer();
         transfer.setAccountFrom(rs.getInt("account_from"));
         transfer.setAccountTo(rs.getInt("account_to"));
@@ -88,4 +100,7 @@ public class TenmoSqlDAO implements TenmoDAO{
         return transfer;
         
     }
+
+	
+	
 }
