@@ -38,6 +38,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     public App(ConsoleService console, AuthenticationService authenticationService) {
 		this.console = console;
 		this.authenticationService = authenticationService;
+		this.accountService = new AccountService(API_BASE_URL);
 	}
 
 	public void run() {
@@ -73,7 +74,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void viewCurrentBalance() {
 		try {
-			System.out.println("Your current account balance is : $"+ accountService.getBalance());
+			System.out.println("Your current account balance is : $"+ accountService.getTenmoAccount().getBalance());
 		} catch (AccountServiceException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,8 +83,12 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+		try {
+		console.printTransfers(accountService.listTransfer());
+		}catch (AccountServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private void viewPendingRequests() {
@@ -148,6 +153,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			UserCredentials credentials = collectUserCredentials();
 		    try {
 				currentUser = authenticationService.login(credentials);
+				this.accountService.AUTH_TOKEN = currentUser.getToken();
 			} catch (AuthenticationServiceException e) {
 				System.out.println("LOGIN ERROR: "+e.getMessage());
 				System.out.println("Please attempt to login again.");

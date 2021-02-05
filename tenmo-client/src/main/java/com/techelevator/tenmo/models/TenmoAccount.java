@@ -7,7 +7,9 @@ public class TenmoAccount {
 	private int userId;
 	private BigDecimal balance;
 
-	
+	public TenmoAccount() {
+		
+	}
 
 	public TenmoAccount(int accountId, int userId, BigDecimal balance) {
 		this.accountId = accountId;

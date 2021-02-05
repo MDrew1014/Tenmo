@@ -6,6 +6,9 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+
+import com.techelevator.tenmo.models.Transfer;
+
 public class ConsoleService {
 
 	private PrintWriter out;
@@ -73,4 +76,13 @@ public class ConsoleService {
 		} while(result == null);
 		return result;
 	}
+	public void printTransfers(Transfer[] transfer) {
+	    System.out.println("--------------------------------------------");
+	    System.out.println("Transfers");
+	    System.out.println("ID                    From/To            Amount");
+	    System.out.println("--------------------------------------------");
+	    for (Transfer transfers : transfer) {
+	      System.out.println(transfers.getAccountFrom() + ": " + transfers.getAccountTo());
+	    }
+	  }
 }
