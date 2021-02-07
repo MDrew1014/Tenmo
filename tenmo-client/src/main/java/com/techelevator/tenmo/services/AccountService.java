@@ -42,7 +42,7 @@ public TenmoAccount getTenmoAccount() throws AccountServiceException {
 				.getBody();
 	} catch(RestClientResponseException ex) {
 		throw new AccountServiceException(ex.getRawStatusCode()+ " : " + ex.getResponseBodyAsString());
-	}
+	} 
 		return tenmoAccount;
 	}
 	

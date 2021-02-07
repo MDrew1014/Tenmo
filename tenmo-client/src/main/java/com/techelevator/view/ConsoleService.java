@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 
 import com.techelevator.tenmo.models.Transfer;
+import com.techelevator.tenmo.models.TransferRequest;
 import com.techelevator.tenmo.models.User;
 
 public class ConsoleService {
@@ -112,4 +113,16 @@ public class ConsoleService {
 			
 		}
 	}
+	public TransferRequest sendMoney(Transfer transfer) {
+		System.out.println("Enter ID of user you are sending to (0 to cancel):");
+		String choice = null;
+		choice = in.nextLine();
+		if(choice.contains("0")) {
+			
+		}
+		return null;
+	}
+	
+	
+	
 }
