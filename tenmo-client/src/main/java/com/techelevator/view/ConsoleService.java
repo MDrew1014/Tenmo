@@ -4,9 +4,10 @@ package com.techelevator.view;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-
+import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.TransferRequest;
 import com.techelevator.tenmo.models.User;
@@ -15,6 +16,7 @@ public class ConsoleService {
 
 	private PrintWriter out;
 	private Scanner in;
+	private AuthenticatedUser currentUser;
 
 	public ConsoleService(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output, true);
@@ -103,16 +105,15 @@ public class ConsoleService {
 		}
 	}
 	
-	public void printUsers(User[] user) {
+	public User promptForTransfer(User[] user) {
 		System.out.println("--------------------------------------------");
 	    System.out.println("Users");
 	    System.out.println("ID             Name");
 	    System.out.println("--------------------------------------------");
-		for(User users : user) {
-			System.out.println(users.getId()+"\t\t"+users.getUsername());
-			
-		}
+	    return (User) this.getChoiceFromOptions(user);
+	    
 	}
+			
 	public TransferRequest sendMoney(Transfer transfer) {
 		System.out.println("Enter ID of user you are sending to (0 to cancel):");
 		String choice = null;

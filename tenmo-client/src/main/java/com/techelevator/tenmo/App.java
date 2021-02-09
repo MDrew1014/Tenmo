@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 
 import com.techelevator.tenmo.models.AuthenticatedUser;
 import com.techelevator.tenmo.models.TenmoAccount;
+import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.TransferRequest;
+import com.techelevator.tenmo.models.User;
 import com.techelevator.tenmo.models.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AccountServiceException;
@@ -28,11 +30,12 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
 	
+	private TransferRequest tRequest;
     private AuthenticatedUser currentUser;
     private ConsoleService console;
     private AuthenticationService authenticationService;
     private AccountService accountService;
-    private TenmoAccount tAccount;
+    
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL));
     	app.run();
@@ -100,17 +103,48 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void sendBucks()  {
-		try {
-			console.printUsers(accountService.listUsers());
-		} catch (AccountServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+	        User[] users;
+			try {
+				users = this.accountService.listUsers();
+			} catch (AccountServiceException e) {
+				System.out.println("Something went wrong");
+				return;
+			}
+	       User selectedUser = console.promptForTransfer(users);
+	        int receivingUserId = selectedUser.getId();
+	        while (receivingUserId==this.currentUser.getUser().getId()) {
+	           System.out.println("Please enter a valid user that is not yourself.");
+	           selectedUser =console.promptForTransfer(users);
+	           receivingUserId = selectedUser.getId();
+	            }
+	        if (receivingUserId == 0) {
+	            mainMenu();
+	        }
+	        String amount = console.getUserInput("Enter amount");
+	        BigDecimal balance;
+			try {
+				balance = this.accountService.getTenmoAccount().getBalance();
+			} catch (AccountServiceException e) {
+				// TODO Auto-generated catch block
+				System.out.println("Something went wrong");
+				return;
+			}
+	        if (balance.subtract(new BigDecimal(amount)).signum() < 0) {
+	            System.out.println(
+	                    amount + " is  more than the " + balance + " you have available to send.");
+	            System.out.println("Please try your transfer again.");
+	            mainMenu();
+	        } else {
+	            TransferRequest transfer = new TransferRequest();
+	            transfer.setAmount(new BigDecimal(amount));
+	            transfer.setUserIdFrom(currentUser.getUser().getId());
+	            transfer.setUserIdTo(receivingUserId);
+	            accountService.startTransfer(transfer);
+	        }
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stu
 		
 	}
 	
