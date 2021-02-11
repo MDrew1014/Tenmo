@@ -4,10 +4,10 @@ package com.techelevator.view;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
+
 import java.util.Scanner;
 
-import com.techelevator.tenmo.models.AuthenticatedUser;
+
 import com.techelevator.tenmo.models.Transfer;
 import com.techelevator.tenmo.models.TransferRequest;
 import com.techelevator.tenmo.models.User;
@@ -16,7 +16,7 @@ public class ConsoleService {
 
 	private PrintWriter out;
 	private Scanner in;
-	private AuthenticatedUser currentUser;
+	
 
 	public ConsoleService(InputStream input, OutputStream output) {
 		this.out = new PrintWriter(output, true);

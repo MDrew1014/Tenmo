@@ -10,15 +10,15 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
-import java.util.List;
+
 
 
 import com.techelevator.tenmo.model.TenmoAccount;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferRequest;
-import com.techelevator.tenmo.model.User;
+
 @Component
 public class TenmoSqlDAO implements TenmoDAO{
 	private JdbcTemplate jdbcTemplate;

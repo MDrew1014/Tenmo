@@ -3,7 +3,7 @@ package com.techelevator.tenmo.controller;
 import java.security.Principal;
 import java.util.List;
 
-import org.springframework.http.HttpMethod;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
