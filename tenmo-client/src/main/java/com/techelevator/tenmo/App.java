@@ -144,7 +144,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stu
+		// TODO Auto-generated method
 		
 	}
 	

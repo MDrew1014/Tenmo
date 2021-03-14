@@ -24,7 +24,6 @@ public class AccountService {
 	  
 	  private final String BASE_URL;
 	  private final RestTemplate restTemplate = new RestTemplate();
-	 // private final ConsoleService console = new ConsoleService(InputStream, OutputStream );
 	  public AccountService(String url) {
 		  this.BASE_URL = url;
 	  }

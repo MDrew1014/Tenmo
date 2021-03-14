@@ -36,10 +36,6 @@ public class AccountController {
 	@RequestMapping(path = "/balance", method = RequestMethod.GET )
 	public TenmoAccount getBalance(Principal principal) {
 		String username = principal.getName();
-		
-		//TODO get user name for principal use userDAO to get user ID
-		//TODO use user id to get user account from tenmoDAO(make get account by user ID)
-
 		return tDAO.getBalance(username);
 
 	}
@@ -50,13 +46,10 @@ public class AccountController {
 	public void transfer(@RequestBody TransferRequest request, Principal principal) throws Exception {
 		String username = principal.getName();
 		int userId = this.uDAO.findIdByUsername(username);
-		if(request.getUserIdFrom()!= userId) {
-			//TODO throw exception here 400 or forbidden
-			
+		if(request.getUserIdFrom()!= userId) {	
+			//TODO throw exception HERE!!!!!!!!!!!! invalid user
 		}tDAO.transfer(request);
-		//fill out transfer class from user to user amount
-		//principal.getName()
-		
+	
 
 	}
 	@PreAuthorize("isAuthenticated()")
